@@ -4,7 +4,6 @@ import json
 from datetime import datetime
 import os
 
-# Initialize session state variables
 if 'library' not in st.session_state:
     st.session_state.library = []
 
@@ -21,18 +20,16 @@ def load_library():
     except FileNotFoundError:
         st.session_state.library = []
 
-# Load library when the app starts
 if os.path.exists('library.json'):
     load_library()
 
-# Set page config
+
 st.set_page_config(page_title="Personal Library Manager", layout="wide")
 
-# Title and description
+
 st.title("📚 Personal Library Manager")
 st.markdown("Manage your personal book collection with ease!")
 
-# Sidebar with options
 with st.sidebar:
     st.header("Menu")
     option = st.radio(
@@ -40,7 +37,7 @@ with st.sidebar:
         ["Add a Book", "Remove a Book", "Search Books", "Display All Books", "Statistics"]
     )
 
-# Add a Book
+
 if option == "Add a Book":
     st.header("Add a New Book")
     with st.form("add_book_form"):
@@ -65,7 +62,6 @@ if option == "Add a Book":
         elif submitted:
             st.error("Please fill in at least the title and author fields.")
 
-# Remove a Book
 elif option == "Remove a Book":
     st.header("Remove a Book")
     if not st.session_state.library:
@@ -78,7 +74,7 @@ elif option == "Remove a Book":
             save_library()
             st.success(f"'{book_to_remove}' has been removed from your library.")
 
-# Search Books
+
 elif option == "Search Books":
     st.header("Search Books")
     search_type = st.radio("Search by:", ["Title", "Author"])
@@ -97,7 +93,7 @@ elif option == "Search Books":
         else:
             st.info("No books found matching your search.")
 
-# Display All Books
+
 elif option == "Display All Books":
     st.header("Your Library")
     if not st.session_state.library:
@@ -106,7 +102,7 @@ elif option == "Display All Books":
         df = pd.DataFrame(st.session_state.library)
         st.dataframe(df, use_container_width=True)
 
-# Statistics
+
 elif option == "Statistics":
     st.header("Library Statistics")
     if not st.session_state.library:
@@ -124,11 +120,11 @@ elif option == "Statistics":
         with col3:
             st.metric("Percentage Read", f"{read_percentage:.1f}%")
         
-        # Genre distribution
+        
         st.subheader("Genre Distribution")
         genre_counts = pd.DataFrame(st.session_state.library)["genre"].value_counts()
         st.bar_chart(genre_counts)
 
-# Footer
+
 st.markdown("---")
 st.markdown("Made with ❤️ using Streamlit")
